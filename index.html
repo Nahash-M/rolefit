@@ -1,0 +1,1660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>RoleFit — Know your fit before you apply</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23D4901E' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3Cpath d='M8 11l2 2 4-4' stroke='%231E6B6B' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --mustard: #D4901E;
+  --mustard-bright: #E8A52A;
+  --mustard-light: #FDF3E0;
+  --mustard-deep: #A06B10;
+  --teal: #1E6B6B;
+  --teal-bright: #2A8F8F;
+  --teal-light: #E0F2F2;
+  --teal-deep: #0F4040;
+  --brick: #B03A2E;
+  --brick-light: #FAECEB;
+  --sky: #4A90A4;
+  --sky-light: #E8F4F8;
+  --navy: #1A2744;
+  --navy-mid: #243158;
+  --ink: #1C1409;
+  --ink-soft: #3D2E18;
+  --muted: #7A6A52;
+  --warm-white: #FDFAF5;
+  --off-white: #F7F3EC;
+  --border: #E8DFD0;
+  --white: #ffffff;
+  --sky-blue: #4A90A4;
+  --brick-red: #B03A2E;
+  --olive: #7A8C3A;
+  --warm-orange: #D4621A;
+  --cobalt: #2A4F8F;
+  --border-stripe-h: 14px;
+}
+
+/* DRESS-COLOUR PAGE BORDER */
+.page-section {
+  position: relative;
+}
+.page-section::before,
+.page-section::after {
+  content: '';
+  display: block;
+  height: var(--border-stripe-h);
+  width: 100%;
+  background: linear-gradient(to right,
+    var(--teal) 0%, var(--teal) 16.6%,
+    var(--mustard) 16.6%, var(--mustard) 33.2%,
+    var(--brick-red) 33.2%, var(--brick-red) 49.8%,
+    var(--sky-blue) 49.8%, var(--sky-blue) 66.4%,
+    var(--cobalt) 66.4%, var(--cobalt) 83%,
+    var(--olive) 83%, var(--olive) 100%
+  );
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'Nunito', sans-serif; font-weight: 400; color: var(--ink); background: var(--warm-white); overflow-x: hidden; line-height: 1.6; }
+
+.page { display: none; min-height: 100vh; }
+.page.active { display: block; }
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1rem 2.5rem;
+  background: var(--navy);
+  border-bottom: 3px solid var(--mustard);
+}
+.nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; cursor: pointer; }
+.nav-logo-text { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 700; color: var(--white); letter-spacing: -0.01em; }
+.nav-logo-text span { color: var(--mustard-bright); }
+.nav-powered { font-size: 0.65rem; color: rgba(255,255,255,0.4); letter-spacing: 0.06em; text-transform: uppercase; }
+.nav-cta {
+  background: var(--mustard); color: var(--ink); padding: 0.6rem 1.5rem;
+  border-radius: 6px; font-size: 0.85rem; font-weight: 700;
+  cursor: pointer; border: none; font-family: 'Nunito', sans-serif;
+  letter-spacing: 0.02em; transition: background 0.2s, transform 0.15s;
+}
+.nav-cta:hover { background: var(--mustard-bright); transform: translateY(-1px); }
+
+/* HERO */
+.hero {
+  min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr;
+  align-items: center; padding: 7rem 2.5rem 4rem; gap: 4rem;
+  background: var(--navy); position: relative; overflow: hidden;
+  border-top: var(--border-stripe-h) solid transparent;
+  border-image: linear-gradient(to right, var(--teal) 0% 16.6%, var(--mustard) 16.6% 33.2%, var(--brick-red) 33.2% 49.8%, var(--sky-blue) 49.8% 66.4%, var(--cobalt) 66.4% 83%, var(--olive) 83% 100%) 1;
+}
+.hero-geo {
+  position: absolute; inset: 0; pointer-events: none; opacity: 0.06;
+  background-image:
+    repeating-linear-gradient(45deg, var(--mustard) 0, var(--mustard) 2px, transparent 0, transparent 50%),
+    repeating-linear-gradient(-45deg, var(--teal) 0, var(--teal) 2px, transparent 0, transparent 50%);
+  background-size: 40px 40px;
+}
+.hero::after {
+  content: ''; position: absolute; bottom: -80px; right: -80px;
+  width: 500px; height: 500px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(212,144,30,0.12) 0%, transparent 65%);
+  pointer-events: none;
+}
+.hero-left { position: relative; z-index: 1; animation: fadeUp 0.9s ease both; }
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--mustard-bright);
+  background: rgba(212,144,30,0.12); padding: 0.4rem 1rem;
+  border-radius: 4px; margin-bottom: 1.5rem;
+  border-left: 3px solid var(--mustard);
+}
+h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2.6rem, 4.5vw, 3.8rem);
+  line-height: 1.1; letter-spacing: -0.01em; color: var(--white);
+  margin-bottom: 1.5rem; font-weight: 600;
+}
+h1 em { color: var(--mustard-bright); font-style: italic; }
+.hero-sub { font-size: 1.05rem; color: rgba(255,255,255,0.72); line-height: 1.8; max-width: 480px; margin-bottom: 2rem; }
+.hero-sub strong { color: var(--white); font-weight: 600; }
+.hero-personal {
+  background: rgba(255,255,255,0.05); border-left: 3px solid var(--teal-bright);
+  border-radius: 0 8px 8px 0; padding: 1rem 1.25rem; margin-bottom: 2rem;
+  font-size: 0.92rem; color: rgba(255,255,255,0.65); line-height: 1.7; font-style: italic;
+}
+.hero-personal strong { color: rgba(255,255,255,0.85); font-style: normal; }
+.btn-main {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--mustard); color: var(--ink); padding: 0.95rem 2rem;
+  border-radius: 6px; font-size: 0.95rem; font-weight: 700;
+  cursor: pointer; border: none; font-family: 'Nunito', sans-serif;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 20px rgba(212,144,30,0.4);
+}
+.btn-main:hover { background: var(--mustard-bright); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(212,144,30,0.5); }
+.hero-note { font-size: 0.8rem; color: rgba(255,255,255,0.38); margin-top: 1rem; }
+.hero-note strong { color: rgba(255,255,255,0.6); }
+
+/* HERO CARD */
+.hero-right { position: relative; z-index: 1; animation: fadeUp 0.9s 0.18s ease both; }
+.hero-card {
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+  border-top: 4px solid var(--mustard); border-radius: 10px; padding: 1.75rem;
+}
+.card-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(255,255,255,0.38); margin-bottom: 1rem; }
+.card-name { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; font-weight: 600; color: var(--white); margin-bottom: 0.2rem; }
+.card-role { font-size: 0.8rem; color: rgba(255,255,255,0.45); margin-bottom: 1.5rem; }
+.score-strip { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.6rem; margin-bottom: 1.5rem; }
+.score-box { background: rgba(255,255,255,0.06); border-radius: 8px; padding: 0.85rem 0.5rem; text-align: center; }
+.score-num { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 700; color: var(--mustard-bright); line-height: 1; }
+.score-num.teal { color: var(--teal-bright); }
+.score-num.brick { color: #E05A4E; }
+.score-lbl { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.07em; color: rgba(255,255,255,0.35); margin-top: 4px; }
+.card-section { margin-bottom: 1rem; }
+.card-sh { display: flex; align-items: center; gap: 8px; margin-bottom: 0.5rem; }
+.card-dot { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+.dot-m { background: var(--mustard-bright); } .dot-b { background: #E05A4E; }
+.card-st { font-size: 0.75rem; font-weight: 600; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.06em; }
+.card-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+.ctag { font-size: 0.7rem; padding: 3px 9px; border-radius: 4px; }
+.ct-g { background: rgba(30,107,107,0.3); color: #7DD8D8; border: 1px solid rgba(42,143,143,0.3); }
+.ct-r { background: rgba(176,58,46,0.25); color: #F09085; border: 1px solid rgba(176,58,46,0.3); }
+.card-rec { background: rgba(212,144,30,0.1); border-left: 3px solid var(--mustard); border-radius: 0 6px 6px 0; padding: 0.85rem 1rem; margin-top: 1rem; }
+.card-rec-lbl { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--mustard-bright); margin-bottom: 5px; font-weight: 700; }
+.card-rec-text { font-size: 0.78rem; color: rgba(255,255,255,0.62); line-height: 1.6; }
+
+/* SECTION SHARED */
+.section-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.28rem 0.85rem; border-radius: 4px; margin-bottom: 1.25rem;
+}
+.st-mustard { background: var(--mustard-light); color: var(--mustard-deep); border-left: 3px solid var(--mustard); }
+.st-teal { background: var(--teal-light); color: var(--teal-deep); border-left: 3px solid var(--teal); }
+.st-brick { background: var(--brick-light); color: var(--brick); border-left: 3px solid var(--brick); }
+.st-sky { background: var(--sky-light); color: var(--sky); border-left: 3px solid var(--sky); }
+h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 3.2vw, 2.8rem); line-height: 1.15;
+  letter-spacing: -0.01em; color: var(--ink); margin-bottom: 1rem; font-weight: 600;
+}
+h2 em { color: var(--mustard-deep); font-style: italic; }
+h2 em.teal { color: var(--teal); }
+.section-sub { font-size: 1rem; color: var(--muted); max-width: 540px; line-height: 1.8; margin-bottom: 3rem; }
+
+/* HOW IT WORKS */
+.how { padding: 6rem 2.5rem; background: var(--off-white); }
+.how-inner { max-width: 1100px; margin: 0 auto; }
+.steps-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; }
+.step-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 10px; padding: 1.75rem; position: relative; overflow: hidden;
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+.step-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; }
+.step-card:nth-child(1)::before { background: var(--mustard); }
+.step-card:nth-child(2)::before { background: var(--teal); }
+.step-card:nth-child(3)::before { background: var(--brick); }
+.step-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(28,20,9,0.1); }
+.step-num {
+  font-family: 'Cormorant Garamond', serif; font-size: 5rem; font-weight: 700;
+  position: absolute; top: 0.5rem; right: 1rem; line-height: 1; opacity: 0.07; color: var(--ink);
+}
+.step-icon { width: 48px; height: 48px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem; }
+.si-m { background: var(--mustard-light); }
+.si-t { background: var(--teal-light); }
+.si-b { background: var(--brick-light); }
+.step-title { font-size: 1.05rem; font-weight: 700; color: var(--ink); margin-bottom: 0.5rem; }
+.step-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
+
+/* DIANA STRIP */
+.diana-strip { background: var(--mustard); padding: 4rem 2.5rem; }
+.diana-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 2fr; gap: 4rem; align-items: center; }
+.diana-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(26,39,68,0.6); margin-bottom: 0.75rem; font-weight: 700; }
+.diana-quote {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: clamp(1.5rem, 2.8vw, 2.1rem); line-height: 1.4;
+  color: var(--navy); margin-bottom: 1.25rem; font-weight: 600;
+}
+.diana-body { font-size: 0.95rem; color: var(--ink-soft); line-height: 1.85; margin-bottom: 1.5rem; }
+.diana-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.88rem; font-weight: 700; color: var(--navy);
+  text-decoration: none; border-bottom: 2px solid rgba(26,39,68,0.3);
+  padding-bottom: 2px; transition: border-color 0.2s;
+}
+.diana-link:hover { border-color: var(--navy); }
+.diana-stats { display: flex; flex-direction: column; gap: 1.5rem; }
+.diana-stat-box { background: rgba(255,255,255,0.35); border-radius: 8px; padding: 1.25rem 1.5rem; border-left: 4px solid var(--navy); }
+.diana-stat-num { font-family: 'Cormorant Garamond', serif; font-size: 2.8rem; font-weight: 700; color: var(--navy); line-height: 1; margin-bottom: 4px; }
+.diana-stat-label { font-size: 0.85rem; color: var(--ink-soft); line-height: 1.5; }
+.diana-tagline { background: var(--navy); color: var(--mustard-bright); font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.1rem; border-radius: 8px; padding: 1rem 1.25rem; margin-top: 0.5rem; }
+
+/* SOCIAL PROOF */
+.social-proof { background: var(--navy); padding: 5rem 2.5rem; }
+.sp-inner-wrap { max-width: 1100px; margin: 0 auto; }
+.sp-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-top: 2.5rem; }
+.sp-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 1.5rem; transition: transform 0.2s; }
+.sp-card:hover { transform: translateY(-3px); }
+.sp-card:nth-child(1) { border-top: 4px solid var(--mustard); }
+.sp-card:nth-child(2) { border-top: 4px solid var(--teal-bright); }
+.sp-card:nth-child(3) { border-top: 4px solid var(--brick); }
+.sp-stars { color: var(--mustard-bright); font-size: 0.9rem; margin-bottom: 0.85rem; letter-spacing: 2px; }
+.sp-text { font-size: 0.9rem; color: rgba(255,255,255,0.68); line-height: 1.75; margin-bottom: 1.1rem; font-style: italic; }
+.sp-author { font-size: 0.78rem; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* TIERS */
+.tiers { padding: 6rem 2.5rem; background: var(--off-white); }
+.tiers-inner { max-width: 1100px; margin: 0 auto; }
+.tiers-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 3rem; }
+.tier-card { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 2rem; transition: transform 0.2s, box-shadow 0.2s; }
+.tier-card:hover { transform: translateY(-3px); box-shadow: 0 12px 36px rgba(28,20,9,0.08); }
+.tier-card.featured { border: 2px solid var(--mustard); background: var(--navy); }
+.tier-badge { display: inline-block; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; padding: 0.28rem 0.85rem; border-radius: 4px; margin-bottom: 1.25rem; }
+.tb-free { background: var(--teal-light); color: var(--teal-deep); }
+.tb-paid { background: var(--mustard); color: var(--ink); }
+.tier-price { font-family: 'Cormorant Garamond', serif; font-size: 2.6rem; font-weight: 700; margin-bottom: 0.25rem; color: var(--teal); }
+.tier-price.gold { color: var(--mustard-bright); }
+.tier-price-note { font-size: 0.8rem; color: var(--muted); margin-bottom: 1.5rem; }
+.tier-price-note.light { color: rgba(255,255,255,0.4); }
+.tier-title { font-family: 'Cormorant Garamond', serif; font-size: 1.35rem; font-weight: 600; color: var(--ink); margin-bottom: 0.5rem; }
+.tier-title.light { color: var(--white); }
+.tier-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.7; margin-bottom: 1.5rem; }
+.tier-desc.light { color: rgba(255,255,255,0.55); }
+.tier-list { list-style: none; }
+.tier-list li { font-size: 0.9rem; display: flex; align-items: flex-start; gap: 10px; padding: 0.6rem 0; border-bottom: 1px solid var(--border); line-height: 1.5; color: var(--ink-soft); }
+.tier-list.light li { color: rgba(255,255,255,0.78); border-bottom-color: rgba(255,255,255,0.07); }
+.tier-list li:last-child { border-bottom: none; }
+.chk { width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.chk-t { background: var(--teal-light); }
+.chk-m { background: var(--mustard); }
+.chk svg { width: 11px; height: 11px; }
+.currency-row { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 1.25rem; }
+.cpill { font-size: 0.75rem; padding: 0.28rem 0.85rem; border-radius: 4px; font-weight: 700; }
+.cp-t { background: var(--teal-light); color: var(--teal-deep); }
+.cp-m { background: rgba(212,144,30,0.2); color: var(--mustard-bright); }
+
+/* FINAL CTA */
+.final-cta { padding: 7rem 2.5rem; background: var(--teal-deep); text-align: center; position: relative; overflow: hidden; }
+.final-cta::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 0.05;
+  background-image: repeating-linear-gradient(45deg, var(--mustard) 0, var(--mustard) 1px, transparent 0, transparent 30%);
+  background-size: 30px 30px;
+}
+.final-cta::after {
+  content: ''; position: absolute; top: -150px; left: 50%; transform: translateX(-50%);
+  width: 700px; height: 700px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(212,144,30,0.15) 0%, transparent 60%);
+  pointer-events: none;
+}
+.final-cta h2 { color: var(--white); max-width: 620px; margin: 0 auto 1rem; position: relative; }
+.final-cta h2 em { color: var(--mustard-bright); }
+.final-cta > p { font-size: 1.05rem; color: rgba(255,255,255,0.55); margin-bottom: 2.75rem; position: relative; }
+.btn-mustard {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--mustard); color: var(--ink); padding: 1.1rem 2.5rem;
+  border-radius: 6px; font-size: 1rem; font-weight: 700; cursor: pointer; border: none;
+  font-family: 'Nunito', sans-serif; letter-spacing: 0.02em;
+  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+  box-shadow: 0 4px 28px rgba(212,144,30,0.4); position: relative;
+}
+.btn-mustard:hover { background: var(--mustard-bright); transform: translateY(-2px); box-shadow: 0 8px 36px rgba(212,144,30,0.5); }
+.final-note { font-size: 0.8rem; color: rgba(255,255,255,0.32); margin-top: 1.25rem; position: relative; }
+
+/* FOOTER */
+footer {
+  padding: 2rem 2.5rem; background: var(--ink);
+  border-top: var(--border-stripe-h) solid transparent;
+  border-image: linear-gradient(to right, var(--teal) 0% 16.6%, var(--mustard) 16.6% 33.2%, var(--brick-red) 33.2% 49.8%, var(--sky-blue) 49.8% 66.4%, var(--cobalt) 66.4% 83%, var(--olive) 83% 100%) 1;
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 0.8rem; color: rgba(255,255,255,0.3); flex-wrap: wrap; gap: 1rem;
+}
+footer a { color: var(--mustard-bright); text-decoration: none; }
+footer a:hover { color: var(--mustard); }
+
+
+
+/* ===================== CHECKOUT MODAL ===================== */
+.modal-overlay {
+  display: none; position: fixed; inset: 0; z-index: 200;
+  background: rgba(26,39,68,0.85); align-items: center; justify-content: center; padding: 1.5rem;
+}
+.modal-overlay.active { display: flex; }
+.modal-box {
+  background: var(--warm-white); border-radius: 14px; width: 100%; max-width: 520px;
+  overflow: hidden; border-top: 6px solid var(--mustard);
+  animation: modalIn 0.3s ease both;
+}
+@keyframes modalIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+.modal-header { padding: 1.5rem 1.75rem 0; }
+.modal-close { float: right; background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--muted); line-height: 1; margin-top:-4px; }
+.modal-close:hover { color: var(--ink); }
+.modal-title { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 700; color: var(--ink); margin-bottom: 0.25rem; }
+.modal-sub { font-size: 0.85rem; color: var(--muted); margin-bottom: 0; }
+.modal-body { padding: 1.25rem 1.75rem 1.75rem; }
+.modal-price-strip {
+  background: var(--navy); border-radius: 8px; padding: 1rem 1.25rem;
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;
+}
+.modal-price-label { font-size: 0.78rem; color: rgba(255,255,255,0.55); }
+.modal-price-amount { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 700; color: var(--mustard-bright); }
+.modal-currency-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+.modal-cpill { font-size: 0.68rem; background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); padding: 2px 8px; border-radius: 3px; }
+.modal-section-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 10px; }
+.modal-payment-options { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 1.25rem; }
+.payment-option {
+  border: 2px solid var(--border); border-radius: 8px; padding: 1rem;
+  cursor: pointer; text-align: center; transition: border-color 0.2s, background 0.2s;
+  background: var(--white);
+}
+.payment-option:hover { border-color: var(--mustard); }
+.payment-option.selected { border-color: var(--mustard); background: var(--mustard-light); }
+.payment-option-name { font-size: 0.92rem; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
+.payment-option-sub { font-size: 0.72rem; color: var(--muted); }
+.payment-option-tag { font-size: 0.65rem; background: var(--teal-light); color: var(--teal-deep); padding: 2px 7px; border-radius: 3px; font-weight: 700; display: inline-block; margin-top: 5px; }
+.modal-divider { height: 1px; background: var(--border); margin: 1.25rem 0; }
+.modal-email-label { font-size: 0.82rem; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+.modal-email-hint { font-size: 0.76rem; color: var(--muted); margin-bottom: 10px; line-height: 1.5; }
+.modal-input { width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.9rem; font-family: 'Nunito', sans-serif; background: var(--white); color: var(--ink); margin-bottom: 10px; transition: border-color 0.2s; }
+.modal-input:focus { outline: none; border-color: var(--mustard); }
+.modal-pay-btn {
+  width: 100%; padding: 1rem; background: var(--mustard); color: var(--ink);
+  border: none; border-radius: 6px; font-size: 0.95rem; font-weight: 700;
+  cursor: pointer; font-family: 'Nunito', sans-serif;
+  transition: background 0.2s, transform 0.15s; box-shadow: 0 4px 16px rgba(212,144,30,0.3);
+}
+.modal-pay-btn:hover { background: var(--mustard-bright); transform: translateY(-1px); }
+.modal-pay-btn:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; transform: none; box-shadow: none; }
+.modal-privacy { font-size: 0.72rem; color: var(--muted); text-align: center; margin-top: 0.75rem; line-height: 1.6; }
+
+/* ===================== GENERATING PAGE ===================== */
+.generating-page { background: var(--off-white); padding-top: 80px; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+.generating-wrap { max-width: 580px; margin: 0 auto; padding: 3rem 1.5rem; text-align: center; }
+.gen-spinner-wrap { position: relative; width: 80px; height: 80px; margin: 0 auto 2rem; }
+.gen-spinner { width: 80px; height: 80px; border: 4px solid var(--mustard-light); border-top-color: var(--mustard); border-radius: 50%; animation: spin 1s linear infinite; }
+.gen-inner-dot { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 20px; height: 20px; background: var(--teal); border-radius: 50%; animation: pulse 1.5s ease-in-out infinite; }
+.gen-title { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 700; color: var(--ink); margin-bottom: 0.5rem; }
+.gen-sub { font-size: 0.95rem; color: var(--muted); margin-bottom: 2.5rem; line-height: 1.7; }
+.gen-steps { background: var(--white); border-radius: 12px; border: 1px solid var(--border); border-top: 4px solid var(--mustard); padding: 1.5rem; text-align: left; margin-bottom: 2rem; }
+.gen-step { display: flex; align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 0.88rem; color: var(--muted); }
+.gen-step:last-child { border-bottom: none; }
+.gen-step.done { color: var(--teal); }
+.gen-step.current { color: var(--ink); font-weight: 700; }
+.gs-icon { width: 22px; height: 22px; border-radius: 5px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.7rem; }
+.gs-pending { background: var(--border); }
+.gs-active { background: var(--mustard-light); border: 2px solid var(--mustard); animation: pulse 1s ease-in-out infinite; }
+.gs-done { background: var(--teal); }
+
+/* ===================== DELIVERY PAGE ===================== */
+.delivery-page { background: var(--off-white); padding-top: 80px; min-height: 100vh; }
+.delivery-wrap { max-width: 720px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+.delivery-header { background: var(--navy); border-radius: 14px; padding: 2rem; margin-bottom: 2rem; border-top: 6px solid var(--mustard); text-align: center; position: relative; overflow: hidden; }
+.delivery-header::before { content: ''; position: absolute; inset: 0; opacity: 0.05; background-image: repeating-linear-gradient(45deg, var(--mustard) 0, var(--mustard) 1px, transparent 0, transparent 25px); }
+.delivery-tag { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--mustard-bright); margin-bottom: 8px; font-weight: 700; position: relative; }
+.delivery-title { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 700; color: var(--white); margin-bottom: 0.35rem; position: relative; }
+.delivery-sub { font-size: 0.88rem; color: rgba(255,255,255,0.55); position: relative; }
+.delivery-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem; }
+.delivery-action-btn {
+  display: flex; align-items: center; gap: 12px; padding: 1.1rem 1.25rem;
+  border-radius: 10px; text-decoration: none; cursor: pointer; border: none;
+  font-family: 'Nunito', sans-serif; transition: transform 0.2s, box-shadow 0.2s;
+}
+.dab-primary { background: var(--mustard); color: var(--ink); box-shadow: 0 4px 16px rgba(212,144,30,0.3); }
+.dab-primary:hover { background: var(--mustard-bright); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(212,144,30,0.4); }
+.dab-secondary { background: var(--white); color: var(--ink); border: 1.5px solid var(--border); }
+.dab-secondary:hover { border-color: var(--teal); transform: translateY(-2px); }
+.dab-icon { width: 38px; height: 38px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1rem; }
+.dab-icon-m { background: rgba(26,39,68,0.15); }
+.dab-icon-t { background: var(--teal-light); }
+.dab-text-label { font-size: 0.78rem; opacity: 0.7; margin-bottom: 2px; }
+.dab-text-main { font-size: 0.92rem; font-weight: 700; }
+.pack-section { background: var(--white); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 1.25rem; overflow: hidden; }
+.pack-section-header { padding: 1.1rem 1.5rem; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); }
+.pack-section-num { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700; flex-shrink: 0; }
+.psn-m { background: var(--mustard); color: var(--ink); }
+.psn-t { background: var(--teal); color: var(--white); }
+.psn-b { background: var(--brick-red); color: var(--white); }
+.pack-section-title { font-size: 0.92rem; font-weight: 700; color: var(--ink); }
+.pack-section-sub { font-size: 0.75rem; color: var(--muted); }
+.question-item { padding: 1.1rem 1.5rem; border-bottom: 1px solid var(--border); }
+.question-item:last-child { border-bottom: none; }
+.question-num { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 6px; }
+.question-text { font-size: 0.92rem; font-weight: 700; color: var(--ink); margin-bottom: 8px; line-height: 1.5; }
+.question-competency { display: inline-block; font-size: 0.68rem; background: var(--mustard-light); color: var(--mustard-deep); padding: 2px 8px; border-radius: 4px; font-weight: 700; margin-bottom: 10px; }
+.question-framework { background: var(--off-white); border-radius: 8px; padding: 0.85rem 1rem; border-left: 3px solid var(--teal); }
+.qf-label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--teal); margin-bottom: 6px; }
+.qf-text { font-size: 0.83rem; color: var(--ink-soft); line-height: 1.65; }
+.qf-hint { font-size: 0.75rem; color: var(--muted); margin-top: 6px; font-style: italic; }
+.reiko-upsell { background: var(--navy); border-radius: 14px; padding: 2rem; margin-top: 2rem; border-left: 5px solid var(--mustard); }
+.ru-tag { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--mustard-bright); margin-bottom: 10px; font-weight: 700; }
+.ru-title { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 700; color: var(--white); margin-bottom: 0.5rem; }
+.ru-body { font-size: 0.88rem; color: rgba(255,255,255,0.65); line-height: 1.8; margin-bottom: 1.25rem; }
+.ru-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--mustard); color: var(--ink); padding: 0.85rem 1.75rem; border-radius: 6px; font-size: 0.9rem; font-weight: 700; text-decoration: none; cursor: pointer; border: none; font-family: 'Nunito', sans-serif; transition: background 0.2s; }
+.ru-btn:hover { background: var(--mustard-bright); }
+
+@media (max-width: 640px) {
+  .modal-payment-options { grid-template-columns: 1fr; }
+  .delivery-actions { grid-template-columns: 1fr; }
+}
+
+
+/* RATING & FEEDBACK */
+.feedback-section { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
+.feedback-title { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 600; color: var(--ink); margin-bottom: 0.35rem; }
+.feedback-sub { font-size: 0.82rem; color: var(--muted); margin-bottom: 1.1rem; line-height: 1.6; }
+.star-row { display: flex; gap: 6px; margin-bottom: 1rem; }
+.star-btn { background: none; border: none; font-size: 1.6rem; cursor: pointer; color: var(--border); transition: color 0.15s, transform 0.1s; line-height: 1; padding: 0; }
+.star-btn:hover { transform: scale(1.15); }
+.star-btn.lit { color: var(--mustard); }
+.feedback-textarea { width: 100%; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 0.85rem; font-family: 'Nunito', sans-serif; background: var(--off-white); color: var(--ink); resize: vertical; min-height: 80px; line-height: 1.6; transition: border-color 0.2s; margin-bottom: 0.75rem; }
+.feedback-textarea:focus { outline: none; border-color: var(--mustard); }
+.feedback-submit { padding: 0.65rem 1.5rem; background: var(--mustard); color: var(--ink); border: none; border-radius: 6px; font-size: 0.85rem; font-weight: 700; cursor: pointer; font-family: 'Nunito', sans-serif; transition: background 0.2s; }
+.feedback-submit:hover { background: var(--mustard-bright); }
+.feedback-submit:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; }
+.feedback-thanks { text-align: center; padding: 0.75rem 0; }
+.feedback-thanks-icon { font-size: 1.5rem; margin-bottom: 6px; }
+.feedback-thanks-title { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 600; color: var(--teal); margin-bottom: 4px; }
+.feedback-thanks-sub { font-size: 0.82rem; color: var(--muted); }
+.feedback-issue-link { font-size: 0.78rem; color: var(--muted); text-align: center; margin-top: 0.5rem; }
+.feedback-issue-link button { background: none; border: none; color: var(--muted); text-decoration: underline; cursor: pointer; font-size: 0.78rem; font-family: 'Nunito', sans-serif; }
+.feedback-issue-link button:hover { color: var(--brick); }
+.issue-form { display: none; margin-top: 0.75rem; }
+.issue-form.visible { display: block; }
+
+/* ===================== TOOL PAGE ===================== */
+.tool-page { background: var(--off-white); padding-top: 80px; }
+.tool-wrap { max-width: 620px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+.tool-progress { display: flex; gap: 6px; margin-bottom: 2.5rem; }
+.tool-dot { height: 5px; border-radius: 2px; flex: 1; background: var(--border); transition: background 0.3s; }
+.tool-dot.done { background: var(--teal); }
+.tool-dot.active { background: var(--mustard); }
+.tool-step { display: none; }
+.tool-step.active { display: block; }
+.tool-step-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.5rem; font-weight: 700; }
+.tool-step-title { font-family: 'Cormorant Garamond', serif; font-size: 2.1rem; font-weight: 600; color: var(--ink); margin-bottom: 0.5rem; line-height: 1.2; }
+.tool-step-sub { font-size: 0.95rem; color: var(--muted); margin-bottom: 2rem; line-height: 1.75; }
+.upload-box {
+  border: 2px dashed var(--border); border-radius: 10px; padding: 2.5rem 2rem;
+  text-align: center; cursor: pointer; margin-bottom: 1rem;
+  background: var(--white); transition: border-color 0.2s, background 0.2s;
+}
+.upload-box:hover { border-color: var(--mustard); background: var(--mustard-light); }
+.upload-box.filled { border-style: solid; border-color: var(--teal); background: var(--teal-light); }
+.upload-icon-wrap { width: 52px; height: 52px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
+.uiw-m { background: var(--mustard-light); }
+.uiw-t { background: var(--teal-light); }
+.upload-text { font-size: 0.9rem; color: var(--ink-soft); }
+.upload-text strong { color: var(--ink); font-weight: 700; }
+.upload-hint { font-size: 0.76rem; color: var(--muted); margin-top: 5px; }
+.upload-filename { font-size: 0.85rem; color: var(--teal); margin-top: 8px; font-weight: 700; display: none; }
+.or-divider { text-align: center; font-size: 0.82rem; color: var(--muted); margin: 1rem 0; }
+.field-label { font-size: 0.82rem; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+.field-hint { font-size: 0.76rem; color: var(--muted); margin-bottom: 10px; }
+textarea {
+  width: 100%; min-height: 155px; font-size: 0.9rem; font-family: 'Nunito', sans-serif;
+  padding: 14px 16px; border-radius: 8px; border: 1.5px solid var(--border);
+  background: var(--white); color: var(--ink); resize: vertical; line-height: 1.65; margin-bottom: 1rem;
+  transition: border-color 0.2s;
+}
+textarea:focus { outline: none; border-color: var(--mustard); }
+.input-field {
+  width: 100%; padding: 13px 16px; border: 1.5px solid var(--border); border-radius: 8px;
+  font-size: 0.9rem; font-family: 'Nunito', sans-serif; background: var(--white);
+  color: var(--ink); margin-bottom: 1rem; transition: border-color 0.2s;
+}
+.input-field:focus { outline: none; border-color: var(--mustard); }
+.btn-tool-primary {
+  width: 100%; padding: 1rem; background: var(--mustard); color: var(--ink); border: none;
+  border-radius: 6px; font-size: 0.95rem; font-weight: 700; cursor: pointer;
+  margin-top: 0.5rem; font-family: 'Nunito', sans-serif;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 4px 18px rgba(212,144,30,0.25);
+}
+.btn-tool-primary:hover { background: var(--mustard-bright); transform: translateY(-1px); }
+.btn-tool-primary:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; transform: none; box-shadow: none; }
+.btn-tool-secondary {
+  width: 100%; padding: 0.85rem; background: transparent; color: var(--muted);
+  border: 1.5px solid var(--border); border-radius: 6px; font-size: 0.88rem;
+  cursor: pointer; margin-top: 0.75rem; font-family: 'Nunito', sans-serif;
+  transition: background 0.2s, color 0.2s;
+}
+.btn-tool-secondary:hover { background: var(--white); color: var(--ink); }
+.privacy-note { font-size: 0.74rem; color: var(--muted); text-align: center; margin-top: 1rem; line-height: 1.65; }
+
+/* ANALYZING */
+.analyzing-wrap { text-align: center; padding: 3rem 0; }
+.spinner { width: 56px; height: 56px; border: 3px solid var(--mustard-light); border-top-color: var(--mustard); border-radius: 50%; animation: spin 0.85s linear infinite; margin: 0 auto 2rem; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.analyzing-title { font-family: 'Cormorant Garamond', serif; font-size: 1.7rem; font-weight: 600; color: var(--ink); margin-bottom: 0.4rem; }
+.analyzing-sub { font-size: 0.88rem; color: var(--muted); margin-bottom: 2.5rem; }
+.analysis-list { list-style: none; text-align: left; max-width: 340px; margin: 0 auto; background: var(--white); border-radius: 10px; padding: 1.25rem 1.5rem; border: 1px solid var(--border); }
+.analysis-list li { font-size: 0.88rem; color: var(--muted); padding: 9px 0; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--border); }
+.analysis-list li:last-child { border-bottom: none; }
+.analysis-list li.done { color: var(--teal); }
+.analysis-list li.current { color: var(--ink); font-weight: 700; }
+.a-check { width: 20px; height: 20px; border-radius: 4px; background: var(--teal); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.a-check svg { width: 11px; height: 11px; }
+.a-pending { width: 20px; height: 20px; border-radius: 4px; border: 1.5px solid var(--border); flex-shrink: 0; }
+.a-active { width: 20px; height: 20px; border-radius: 4px; border: 2px solid var(--mustard); flex-shrink: 0; animation: pulse 1s ease-in-out infinite; background: var(--mustard-light); }
+@keyframes pulse { 0%,100%{opacity:1;}50%{opacity:0.35;} }
+
+/* REPORT */
+.report-header { background: var(--navy); border-radius: 10px; padding: 1.75rem; margin-bottom: 1.5rem; border-top: 5px solid var(--mustard); }
+.report-header-tag { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--mustard-bright); margin-bottom: 8px; font-weight: 700; }
+.report-name { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 600; color: var(--white); }
+.report-role-text { font-size: 0.82rem; color: rgba(255,255,255,0.5); margin-top: 3px; }
+.report-scores { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 1.5rem; }
+.report-score-box { background: var(--white); border-radius: 8px; padding: 1.1rem 0.75rem; text-align: center; border: 1px solid var(--border); }
+.report-score-num { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 700; color: var(--teal); line-height: 1; }
+.report-score-num.amber { color: var(--mustard-deep); }
+.report-score-lbl { font-size: 0.63rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); margin-top: 5px; font-weight: 700; }
+.report-section { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 1.35rem 1.5rem; margin-bottom: 1rem; }
+.report-section.s-strengths { border-left: 5px solid var(--teal); }
+.report-section.s-gaps { border-left: 5px solid var(--mustard); }
+.report-section-head { display: flex; align-items: center; gap: 10px; margin-bottom: 0.9rem; }
+.report-section-icon { width: 32px; height: 32px; border-radius: 7px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.rsi-t { background: var(--teal-light); }
+.rsi-m { background: var(--mustard-light); }
+.report-section-title { font-size: 0.9rem; font-weight: 700; color: var(--ink); }
+.report-list { list-style: none; }
+.report-list li { font-size: 0.87rem; color: var(--ink-soft); padding: 7px 0; border-bottom: 1px solid var(--border); line-height: 1.6; display: flex; gap: 10px; }
+.report-list li:last-child { border-bottom: none; }
+.rbullet { width: 7px; height: 7px; border-radius: 2px; margin-top: 6px; flex-shrink: 0; }
+.rb-t { background: var(--teal); } .rb-m { background: var(--mustard); }
+.rec-block { background: var(--navy); border-radius: 10px; padding: 1.6rem; margin-bottom: 1.75rem; border-left: 5px solid var(--mustard); }
+.rec-block-tag { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--mustard-bright); margin-bottom: 10px; font-weight: 700; }
+.rec-block-text { font-size: 0.92rem; color: rgba(255,255,255,0.78); line-height: 1.8; }
+
+/* UPSELL */
+.upsell-block { border: 2px solid var(--mustard); border-radius: 10px; padding: 1.85rem; background: var(--white); }
+.upsell-tag { display: inline-block; background: var(--mustard); color: var(--ink); font-size: 0.68rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; padding: 0.28rem 0.85rem; border-radius: 4px; margin-bottom: 1rem; }
+.upsell-title { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 600; color: var(--ink); margin-bottom: 0.5rem; }
+.upsell-desc { font-size: 0.87rem; color: var(--muted); line-height: 1.75; margin-bottom: 1.25rem; }
+.upsell-features { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1.35rem; }
+.upsell-feat { font-size: 0.83rem; color: var(--ink-soft); display: flex; align-items: center; gap: 7px; }
+.upsell-price-row { display: flex; align-items: baseline; gap: 8px; margin-bottom: 0.75rem; }
+.upsell-price-main { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 700; color: var(--teal); }
+.upsell-price-note { font-size: 0.8rem; color: var(--muted); }
+.upsell-currencies { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.35rem; }
+.ucpill { font-size: 0.72rem; padding: 3px 10px; border-radius: 4px; background: var(--teal-light); color: var(--teal-deep); font-weight: 700; }
+.upsell-cta { width: 100%; padding: 1rem; background: var(--mustard); color: var(--ink); border: none; border-radius: 6px; font-size: 0.95rem; font-weight: 700; cursor: pointer; font-family: 'Nunito', sans-serif; transition: background 0.2s, transform 0.15s; box-shadow: 0 4px 18px rgba(212,144,30,0.25); }
+.upsell-cta:hover { background: var(--mustard-bright); transform: translateY(-1px); }
+.upsell-skip { width: 100%; padding: 0.75rem; background: transparent; color: var(--muted); border: none; font-size: 0.82rem; cursor: pointer; margin-top: 0.5rem; font-family: 'Nunito', sans-serif; text-decoration: underline; }
+.upsell-skip:hover { color: var(--ink); }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.75s ease, transform 0.75s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 768px) {
+  nav { padding: 1rem 1.25rem; }
+  .hero { grid-template-columns: 1fr; padding: 6rem 1.25rem 3rem; min-height: auto; }
+  .hero-right { display: none; }
+  .how, .tiers { padding: 4rem 1.25rem; }
+  .diana-strip { padding: 3.5rem 1.25rem; }
+  .diana-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+  .diana-inner-v2 { grid-template-columns: 1fr; gap: 2.5rem; }
+  .diana-identity { flex-direction: row; text-align: left; flex-wrap: wrap; }
+  .diana-circle-wrap { width: 110px; height: 110px; }
+  .diana-stats { flex-direction: row; gap: 1rem; }
+  .diana-stat-box { flex: 1; }
+  .steps-grid, .tiers-grid, .sp-grid { grid-template-columns: 1fr; }
+  .social-proof { padding: 4rem 1.25rem; }
+  .final-cta { padding: 5rem 1.25rem; }
+  footer { flex-direction: column; align-items: flex-start; padding: 1.5rem 1.25rem; }
+  .tool-wrap { padding: 2rem 1.25rem 3rem; }
+  .upsell-features { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo" onclick="showPage('landing')">
+    <span class="nav-logo-text">Role<span>Fit</span></span>
+    <span class="nav-powered">· powered by <a href="https://www.rieko.ke" target="_blank" style="color:rgba(255,255,255,0.4);text-decoration:none;border-bottom:1px solid rgba(255,255,255,0.2);">Rieko</a></span>
+  </div>
+  <button class="nav-cta" onclick="showPage('tool');initTool();">Get my free report</button>
+</nav>
+
+<!-- ===================== LANDING PAGE ===================== -->
+<div class="page active" id="page-landing">
+
+  <section class="hero">
+    <div class="hero-geo"></div>
+    <div class="hero-left">
+      <div class="hero-eyebrow">Free CV analysis · Results in minutes</div>
+      <h1>You applied.<br>But did your CV<br><em>really speak to them?</em></h1>
+      <p class="hero-sub">Here's the truth most people don't hear until it's too late: <strong>a great CV and the right CV for a specific job are two very different things.</strong> RoleFit tells you the difference — before you apply.</p>
+      <div class="hero-personal">
+        I've spent close to three decades in HR watching brilliant people get passed over — not because they weren't good enough, but because their CV didn't tell the right story for that particular role. <strong>RoleFit exists so that never has to be you.</strong>
+      </div>
+      <button class="btn-main" onclick="showPage('tool');initTool();">
+        Get my free Fit Report
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3.5 9h11M9.5 4l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <p class="hero-note">No account needed. <strong>Completely free.</strong> Takes two minutes.</p>
+    </div>
+    <div class="hero-right">
+      <div class="hero-card">
+        <p class="card-label">Sample Fit Report · RoleFit</p>
+        <p class="card-name">Amara Osei-Bonsu</p>
+        <p class="card-role">Project Manager — TechBridge Africa, Accra</p>
+        <div class="score-strip">
+          <div class="score-box"><div class="score-num teal">81<span style="font-size:1rem;opacity:0.4;">%</span></div><div class="score-lbl">Overall fit</div></div>
+          <div class="score-box"><div class="score-num">6</div><div class="score-lbl">Strengths</div></div>
+          <div class="score-box"><div class="score-num brick">2</div><div class="score-lbl">Gaps</div></div>
+        </div>
+        <div class="card-section">
+          <div class="card-sh"><span class="card-dot dot-m"></span><span class="card-st">Strengths matched</span></div>
+          <div class="card-tags">
+            <span class="ctag ct-g">Agile delivery</span><span class="ctag ct-g">Stakeholder mgmt</span>
+            <span class="ctag ct-g">PMP certified</span><span class="ctag ct-g">Cross-functional</span>
+          </div>
+        </div>
+        <div class="card-section">
+          <div class="card-sh"><span class="card-dot dot-b"></span><span class="card-st">Gaps to address</span></div>
+          <div class="card-tags"><span class="ctag ct-r">Jira admin</span><span class="ctag ct-r">Budget reporting</span></div>
+        </div>
+        <div class="card-rec">
+          <div class="card-rec-lbl">Our recommendation</div>
+          <div class="card-rec-text">Strong candidate. Lead with your risk management work. Address the Jira gap directly in your cover letter — show you've used comparable tools and adapt quickly.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="how page-section">
+    <div class="how-inner">
+      <div class="section-tag st-mustard">How it works</div>
+      <h2>Simple, honest, and <em>faster than you think</em></h2>
+      <p class="section-sub">No jargon. No vague "good luck with your application" energy. Just a real, honest look at how you match up — and exactly what to do next.</p>
+      <div class="steps-grid">
+        <div class="step-card reveal">
+          <div class="step-num">01</div>
+          <div class="step-icon si-m"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 4h14v14H4z" stroke="var(--mustard-deep)" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 9h6M8 12h4" stroke="var(--mustard-deep)" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <div class="step-title">Upload your CV</div>
+          <div class="step-desc">Just drag, drop, and you're done. PDF or Word — whatever you have. We read it the way a recruiter would, without the bias or the time pressure.</div>
+        </div>
+        <div class="step-card reveal">
+          <div class="step-num">02</div>
+          <div class="step-icon si-t"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="5" width="16" height="14" rx="2" stroke="var(--teal)" stroke-width="1.5"/><path d="M7 9h8M7 13h5" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <div class="step-title">Add the job description</div>
+          <div class="step-desc">Paste it in or upload the file. The more complete the description, the sharper your report will be. Don't trim it — more detail means better insight.</div>
+        </div>
+        <div class="step-card reveal">
+          <div class="step-num">03</div>
+          <div class="step-icon si-b"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 14l5-5 4 4 5-7" stroke="var(--brick)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="step-title">Read your Fit Report</div>
+          <div class="step-desc">Your match score, your strongest selling points, an honest look at the gaps, and one clear thing to do before you send that application. In your inbox in under two minutes.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DIANA SECTION -->
+  <section class="diana-strip page-section">
+    <div class="diana-inner">
+      <div class="diana-stats reveal">
+        <div class="diana-stat-box">
+          <div class="diana-stat-num">30<span style="font-size:1.4rem;">yrs</span></div>
+          <div class="diana-stat-label">HR &amp; Leadership</div>
+        </div>
+        <div class="diana-stat-box">
+          <div class="diana-stat-num">Global</div>
+          <div class="diana-stat-label">coaching reach with African warmth</div>
+        </div>
+        <div class="diana-tagline">"Not just qualified. Prepared. Visible. Ready."</div>
+      </div>
+      <div class="reveal">
+        <div class="diana-label">A word from the founder</div>
+        <div class="diana-quote">"I built this because I believe every applicant deserves to know how to put their best self forward before a recruiter who makes the decision — in 6 seconds — whether you make the cut or not."</div>
+        <p class="diana-body">My name is Diana. For three decades, I've led HR Strategy and Leadership across some of the world's most complex organisations. I coached aspiring and in situ leaders informally — long before I made it my life's work as a certified Executive and Leadership Coach — because I couldn't bear watching talented people stay stuck. RoleFit is the tool I wish I could have handed every single one of them: honest, practical, and built around the belief that preparation is not a luxury. It is a right.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIERS -->
+
+  <section class="tiers page-section">
+    <div class="tiers-inner">
+      <div class="section-tag st-teal">What you get</div>
+      <h2>Start for free.<br>Go deeper <em>when you're ready.</em></h2>
+      <p class="section-sub">Your Fit Report costs nothing and always will. The Interview Edge Pack is there for the moments that really matter — when you want to walk into that room knowing you've done everything you could.</p>
+      <div class="tiers-grid">
+        <div class="tier-card reveal">
+          <span class="tier-badge tb-free">Free — always</span>
+          <div class="tier-price">KES 0</div>
+          <div class="tier-price-note">No credit card. No account. No catch.</div>
+          <div class="tier-title">The Fit Report</div>
+          <div class="tier-desc">Everything you need to know before you send that application. Honest, specific, and in your inbox in under two minutes.</div>
+          <ul class="tier-list">
+            <li><span class="chk chk-t"><svg viewBox="0 0 11 11" fill="none"><path d="M2 5.5l2.5 2.5L9 3" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>CV vs JD match score</li>
+            <li><span class="chk chk-t"><svg viewBox="0 0 11 11" fill="none"><path d="M2 5.5l2.5 2.5L9 3" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Your top strengths for this specific role</li>
+            <li><span class="chk chk-t"><svg viewBox="0 0 11 11" fill="none"><path d="M2 5.5l2.5 2.5L9 3" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Honest, kind gap analysis</li>
+            <li><span class="chk chk-t"><svg viewBox="0 0 11 11" fill="none"><path d="M2 5.5l2.5 2.5L9 3" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>One clear, actionable next step</li>
+          </ul>
+        </div>
+        <div class="tier-card featured reveal">
+          <span class="tier-badge tb-paid">Interview Edge Pack</span>
+          <div class="tier-price gold">KES 1,500</div>
+          <div class="tier-price-note light">One-time payment · Delivered instantly</div>
+          <div class="tier-title light">Walk in prepared, not just hopeful</div>
+          <div class="tier-desc light">Most candidates spend hours researching the company. Almost none prepare for the actual questions. This pack is the difference between a good interview and a great one.</div>
+          <ul class="tier-list light">
+            <li><span class="chk chk-m"><svg viewBox="0 0 11 11" fill="none"><path d="M2 5.5l2.5 2.5L9 3" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Interview questions pulled from your exact JD</li>
+            <li><span class="chk chk-m"><svg viewBox="0 0 11 11" fill="none"><path d="M2 5.5l2.5 2.5L9 3" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Proven answer frameworks so you know how to answer, not just what to say</li>
+            <li><span class="chk chk-m"><svg viewBox="0 0 11 11" fill="none"><path d="M2 5.5l2.5 2.5L9 3" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Scenario &amp; situational questions</li>
+            <li><span class="chk chk-m"><svg viewBox="0 0 11 11" fill="none"><path d="M2 5.5l2.5 2.5L9 3" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Acing the interview masterclass</li>
+          </ul>
+          <div class="currency-row">
+            <span class="cpill cp-m">KES 1,500</span><span class="cpill cp-m">USD $15</span>
+            <span class="cpill cp-m">GBP £15</span><span class="cpill cp-m">EUR €15</span>
+            <span class="cpill cp-m">AUD $15</span><span class="cpill cp-m">CAD $15</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="final-cta page-section">
+    <h2>Stop guessing.<br>Start knowing <em>exactly where you stand.</em></h2>
+    <p>Free. Two minutes. No account. Just the truth you need to move forward.</p>
+    <button class="btn-mustard" onclick="showPage('tool');initTool();">
+      Get my free Fit Report
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3.5 9h11M9.5 4l5 5-5 5" stroke="var(--ink)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <p class="final-note">No spam. No selling. Just your report — and a path forward.</p>
+  </section>
+
+  <footer>
+    <div>
+      <span style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:rgba(255,255,255,0.5);">Your<span style="color:var(--mustard-bright);">RoleFit</span></span>
+      <span style="margin-left:8px;">· powered by <a href="https://www.rieko.ke" target="_blank">Rieko</a></span>
+    </div>
+    <div style="display:flex;gap:1.5rem;">
+      <a href="#" onclick="showLegalModal('privacy')">Privacy Policy</a>
+      <a href="#" onclick="showLegalModal('terms')">Terms</a>
+      <a href="mailto:diana@rieko.ke">Contact</a>
+    </div>
+  </footer>
+</div>
+
+<!-- ===================== TOOL PAGE ===================== -->
+<div class="page tool-page" id="page-tool">
+  <div class="tool-wrap">
+    <div class="tool-progress">
+      <div class="tool-dot active" id="td1"></div>
+      <div class="tool-dot" id="td2"></div>
+      <div class="tool-dot" id="td3"></div>
+      <div class="tool-dot" id="td4"></div>
+    </div>
+
+    <div class="tool-step active" id="ts1">
+      <p class="tool-step-label">Step 1 of 3</p>
+      <h2 class="tool-step-title">Let's start with your CV</h2>
+      <p class="tool-step-sub">Upload your CV and we'll read it the way a recruiter does — looking for what stands out, and what doesn't. PDF or Word, any version works.</p>
+      <div class="upload-box" id="cv-box" onclick="handleUpload('cv')">
+        <div class="upload-icon-wrap uiw-m">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 4v12M7 9l5-5 5 5" stroke="var(--mustard-deep)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 20h16" stroke="var(--mustard-deep)" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <p class="upload-text"><strong>Click to upload your CV</strong> or drag and drop</p>
+        <p class="upload-hint">PDF, DOCX — max 5MB</p>
+        <p class="upload-filename" id="cv-filename"></p>
+      </div>
+      <input type="file" id="cv-file-input" accept=".pdf,.doc,.docx" style="display:none;" onchange="fileSelected('cv',this)"/>
+      <button class="btn-tool-primary" id="btn-ts1" onclick="goToolStep(2)" disabled>Continue →</button>
+    </div>
+
+    <div class="tool-step" id="ts2">
+      <p class="tool-step-label">Step 2 of 3</p>
+      <h2 class="tool-step-title">Now the job description</h2>
+      <p class="tool-step-sub">Paste the full posting — don't trim it. Every line matters: the requirements, the responsibilities, even the "nice to haves." The more we see, the sharper your report.</p>
+      <p class="field-label">Paste the job description here</p>
+      <p class="field-hint">Copy directly from the job posting — include everything you see.</p>
+      <textarea id="jd-text" placeholder="Paste the full job description here..." oninput="checkJD()"></textarea>
+      <div class="or-divider">— or upload the file instead —</div>
+      <div class="upload-box" id="jd-box" onclick="handleUpload('jd')" style="margin-bottom:1.5rem;">
+        <div class="upload-icon-wrap uiw-t">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 4v12M7 9l5-5 5 5" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 20h16" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <p class="upload-text"><strong>Upload the job description</strong></p>
+        <p class="upload-hint">PDF, DOCX</p>
+        <p class="upload-filename" id="jd-filename"></p>
+      </div>
+      <input type="file" id="jd-file-input" accept=".pdf,.doc,.docx" style="display:none;" onchange="fileSelected('jd',this)"/>
+      <button class="btn-tool-primary" id="btn-ts2" onclick="goToolStep(3)" disabled>Analyse my fit →</button>
+      <button class="btn-tool-secondary" onclick="goToolStep(1)">← Back</button>
+    </div>
+
+    <div class="tool-step" id="ts3">
+      <p class="tool-step-label">Step 3 of 3</p>
+      <h2 class="tool-step-title">Where shall we send it?</h2>
+      <p class="tool-step-sub">Your Fit Report will be ready in under two minutes. Tell us your name and where to send it — and we'll get it to you the moment it's done.</p>
+      <p class="field-label">Your first name</p>
+      <input class="input-field" type="text" id="t-name" placeholder="What should we call you?" oninput="checkEmail()"/>
+      <p class="field-label">Your email address</p>
+      <input class="input-field" type="email" id="t-email" placeholder="you@example.com" oninput="checkEmail()"/>
+      <button class="btn-tool-primary" id="btn-ts3" onclick="goToolStep('analyzing')" disabled>Send me my free Fit Report →</button>
+      <p class="privacy-note">Your details are used only to send your report. We will never spam you or share your information. Ever.</p>
+    </div>
+
+    <div class="tool-step" id="ts-analyzing">
+      <div class="analyzing-wrap">
+        <div class="spinner"></div>
+        <div class="analyzing-title">Reading your story...</div>
+        <div class="analyzing-sub">We're comparing your CV against the role. Give us about 60 seconds.</div>
+        <ul class="analysis-list" id="analysis-list">
+          <li id="al1"><span class="a-active"></span>Reading your CV</li>
+          <li id="al2"><span class="a-pending"></span>Scanning the job description</li>
+          <li id="al3"><span class="a-pending"></span>Matching your strengths to the role</li>
+          <li id="al4"><span class="a-pending"></span>Identifying the gaps</li>
+          <li id="al5"><span class="a-pending"></span>Writing your recommendation</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tool-step" id="ts-report">
+      <div class="report-header">
+        <div class="report-header-tag">Your RoleFit report</div>
+        <div class="report-name" id="report-name">Alex Mensah</div>
+        <div class="report-role-text">Marketing Coordinator — Jumia Technologies, Lagos</div>
+      </div>
+      <div class="report-scores">
+        <div class="report-score-box"><div class="report-score-num">73<span style="font-size:1rem;color:var(--muted);">%</span></div><div class="report-score-lbl">Overall fit</div></div>
+        <div class="report-score-box"><div class="report-score-num">5</div><div class="report-score-lbl">Strengths matched</div></div>
+        <div class="report-score-box"><div class="report-score-num amber">3</div><div class="report-score-lbl">Gaps found</div></div>
+      </div>
+      <div class="report-section s-strengths">
+        <div class="report-section-head">
+          <div class="report-section-icon rsi-t"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 4.5" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="report-section-title">Where you shine for this role</div>
+        </div>
+        <ul class="report-list">
+          <li><span class="rbullet rb-t"></span>Your content creation background is a strong match for the multi-channel campaign requirement — this is a real selling point</li>
+          <li><span class="rbullet rb-t"></span>Two years of social media management speaks directly to what they're looking for</li>
+          <li><span class="rbullet rb-t"></span>Google Analytics experience lines up well with the data-reporting expectations in the JD</li>
+          <li><span class="rbullet rb-t"></span>That consumer brand internship shows commercial awareness — don't hide it</li>
+          <li><span class="rbullet rb-t"></span>Your Communications degree is a close match for the preferred qualification</li>
+        </ul>
+      </div>
+      <div class="report-section s-gaps">
+        <div class="report-section-head">
+          <div class="report-section-icon rsi-m"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 5v4M8 11v1" stroke="var(--mustard-deep)" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="8" r="6" stroke="var(--mustard-deep)" stroke-width="1.5"/></svg></div>
+          <div class="report-section-title">Gaps worth addressing before you apply</div>
+        </div>
+        <ul class="report-list">
+          <li><span class="rbullet rb-m"></span>The JD mentions paid media (Meta Ads, Google Ads) — this doesn't appear on your CV. Even informal experience is worth mentioning</li>
+          <li><span class="rbullet rb-m"></span>Email marketing tools (Mailchimp, Klaviyo) come up in the requirements — worth a line if you've touched these at all</li>
+          <li><span class="rbullet rb-m"></span>Basic project coordination is expected — dig back and add any relevant examples, however small</li>
+        </ul>
+      </div>
+      <div class="rec-block">
+        <div class="rec-block-tag">The honest recommendation</div>
+        <div class="rec-block-text">You're in a stronger position than you might think. Your content and analytics background puts you ahead of many applicants. Before you send this, add a line or two about any paid media exposure — even if it was informal or on a personal project. In your cover letter, acknowledge the email marketing gap and show genuine enthusiasm for learning it. Then in the interview, lead with your data-driven approach to content. That's your edge. Use it.</div>
+      </div>
+
+      <!-- FEEDBACK ON REPORT -->
+      <div class="feedback-section" id="feedback-report" style="margin-top:1.5rem; padding: 0; overflow: hidden; border: none; background: transparent;">
+        <iframe src="https://senja.io/p/rolefit/r/2YylPe" width="100%" height="600" frameborder="0" style="border-radius:12px; background: transparent;"></iframe>
+      </div>
+
+      <div class="upsell-block">
+        <span class="upsell-tag">Take the next step — Interview Edge Pack</span>
+        <div class="upsell-title">Now that you know your fit — let's make sure you're ready for the room</div>
+        <div class="upsell-desc">Getting the interview is one thing. Walking in prepared is another. The Interview Edge Pack gives you questions drawn directly from this job description, with proven frameworks that show you not just what to say — but how to say it well. Plus an acing the interview masterclass from a coach with close to three decades of experience in what makes people stand out.</div>
+        <div class="upsell-features">
+          <span class="upsell-feat"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l3 3 7-6" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Questions pulled from your exact JD</span>
+          <span class="upsell-feat"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l3 3 7-6" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Proven answer frameworks</span>
+          <span class="upsell-feat"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l3 3 7-6" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Scenario questions</span>
+          <span class="upsell-feat"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7l3 3 7-6" stroke="var(--teal)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>Acing the interview masterclass</span>
+        </div>
+        <div class="upsell-price-row">
+          <span class="upsell-price-main">KES 1,500</span>
+          <span class="upsell-price-note">one-time · straight to your inbox</span>
+        </div>
+        <div class="upsell-currencies">
+          <span class="ucpill">KES 1,500</span><span class="ucpill">USD $15</span>
+          <span class="ucpill">GBP £15</span><span class="ucpill">EUR €15</span>
+          <span class="ucpill">AUD $15</span><span class="ucpill">CAD $15</span>
+        </div>
+        <button class="upsell-cta" onclick="showCheckout()">Yes — I want to walk in prepared</button>
+        <button class="upsell-skip" onclick="showPage('landing')">My free report is enough for now — thank you</button>
+      </div>
+
+
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script type="text/javascript">
+  (function() {
+    emailjs.init({
+      publicKey: "06iO8mXAFtJT-MqnB",
+    });
+  })();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+<script>
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.21/mammoth.browser.min.js"></script>
+<script>
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    window.scrollTo(0,0);
+  }
+  function initTool() { goToolStep(1); }
+  function setDots(active, done) {
+    [1,2,3,4].forEach(i => {
+      const d = document.getElementById('td'+i);
+      d.className = 'tool-dot';
+      if (done && done.includes(i)) d.classList.add('done');
+      if (i === active) d.classList.add('active');
+    });
+  }
+  function goToolStep(step) {
+    document.querySelectorAll('.tool-step').forEach(s => s.classList.remove('active'));
+    if (step===1){ document.getElementById('ts1').classList.add('active'); setDots(1,[]); }
+    else if (step===2){ document.getElementById('ts2').classList.add('active'); setDots(2,[1]); }
+    else if (step===3){ document.getElementById('ts3').classList.add('active'); setDots(3,[1,2]); }
+    else if (step==='analyzing'){
+      document.getElementById('ts-analyzing').classList.add('active'); setDots(4,[1,2,3]); runAnalysis();
+    } else if (step==='report'){
+      document.getElementById('ts-report').classList.add('active'); setDots(null,[1,2,3,4]);
+      const n = document.getElementById('t-name').value.trim();
+      const e = document.getElementById('t-email').value.trim();
+      if(n) document.getElementById('report-name').textContent = n;
+      
+      // Auto-send the formatted report via EmailJS (Option 1)
+      const data = window.generatedReportData;
+      const strengthsText = data && data.strengths ? data.strengths.map(s => "• " + s).join('\n') : "";
+      const gapsText = data && data.gaps ? data.gaps.map(g => "• " + g).join('\n') : "";
+      
+      emailjs.send('service_lqnhctm', 'template_9wvgotm', {
+        to_name: n || 'Applicant',
+        to_email: e,
+        role_title: data ? data.role_title : 'Your Target Role',
+        overall_fit_score: data ? data.overall_fit_score : "N/A",
+        strengths: strengthsText,
+        gaps: gapsText,
+        recommendation: data ? data.recommendation : ""
+      }).then(
+        (response) => { console.log('Email sent successfully!', response.status, response.text); },
+        (error) => { console.error('Email failed to send.', error); }
+      );
+    }
+    window.scrollTo(0,0);
+  }
+  function handleUpload(type) { document.getElementById(type+'-file-input').click(); }
+  let uploadedCVFile = null;
+  let uploadedJDFile = null;
+
+  function fileSelected(type, input) {
+    if(!input.files||!input.files[0]) return;
+    document.getElementById(type+'-box').classList.add('filled');
+    const fn = document.getElementById(type+'-filename');
+    fn.style.display='block'; fn.textContent = '✓ ' + input.files[0].name;
+    if(type==='cv') {
+      uploadedCVFile = input.files[0];
+      document.getElementById('btn-ts1').disabled=false;
+    }
+    if(type==='jd') {
+      uploadedJDFile = input.files[0];
+      document.getElementById('btn-ts2').disabled=false;
+    }
+  }
+  function checkJD() {
+    document.getElementById('btn-ts2').disabled = document.getElementById('jd-text').value.trim().length < 30;
+  }
+  function checkEmail() {
+    const n = document.getElementById('t-name').value.trim();
+    const e = document.getElementById('t-email').value.trim();
+    document.getElementById('btn-ts3').disabled = !(n.length>0 && e.includes('@') && e.includes('.'));
+  }
+  async function extractTextFromFile(file) {
+    if(!file) return '';
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      if(file.name.toLowerCase().endsWith('.pdf')) {
+        const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
+        let text = '';
+        for(let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const content = await page.getTextContent();
+          text += content.items.map(s => s.str).join(' ') + '\n';
+        }
+        return text;
+      } else if(file.name.toLowerCase().endsWith('.doc') || file.name.toLowerCase().endsWith('.docx')) {
+        const result = await mammoth.extractRawText({arrayBuffer: arrayBuffer});
+        return result.value;
+      }
+    } catch (e) {
+      console.error("File extraction error:", e);
+      alert("There was an error reading your document. Please check the console.");
+    }
+    return '';
+  }
+
+  async function callGroqForReport(cvText, jdText) {
+    const GROQ_API_KEY = "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";
+    
+    const prompt = `You are an expert HR Analyst. Analyze this CV against this Job Description. 
+Return ONLY clean JSON format without any markdown wrappers or surrounding text:
+{
+  "role_title": "extracted or inferred job title",
+  "overall_fit_score": integer (0-100),
+  "strengths_matched_count": integer,
+  "gaps_found_count": integer,
+  "strengths": ["string", "string"],
+  "gaps": ["string", "string"],
+  "recommendation": "1 paragraph specific to the candidate."
+}
+CV:
+${cvText}
+
+JD:
+${jdText}`;
+    
+    try {
+      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${GROQ_API_KEY}`
+        },
+        body: JSON.stringify({
+          model: "llama-3.3-70b-versatile",
+          response_format: { type: "json_object" },
+          messages: [
+            { role: "system", content: "You are an expert HR Analyst. Always output strictly valid JSON." },
+            { role: "user", content: prompt }
+          ],
+          temperature: 0.2
+        })
+      });
+      const data = await response.json();
+      if (data.error) {
+        console.error("Groq API Error:", data);
+        alert("Groq Error: " + data.error.message);
+        return getMockReportData();
+      }
+      
+      const rawText = data.choices[0].message.content;
+      
+      // Robust JSON extraction as a fallback
+      const cleanText = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
+      const firstBrace = cleanText.indexOf('{');
+      const lastBrace = cleanText.lastIndexOf('}');
+      const jsonStr = (firstBrace !== -1 && lastBrace !== -1) 
+        ? cleanText.substring(firstBrace, lastBrace + 1) 
+        : cleanText;
+        
+      return JSON.parse(jsonStr);
+    } catch(err) {
+      console.error("Parse Error:", err);
+      alert("Parse Error: " + err.message + "\nCheck browser console for the raw output.");
+      return getMockReportData();
+    }
+  }
+
+  function getMockReportData() {
+    return {
+      role_title: "Marketing Coordinator",
+      overall_fit_score: 73,
+      strengths_matched_count: 5,
+      gaps_found_count: 3,
+      strengths: ["Content creation background is a strong match", "Two years of social media management", "Google Analytics experience lines up well"],
+      gaps: ["No paid media experience", "Email marketing tools lack", "Basic project coordination"],
+      recommendation: "You're in a stronger position than you might think. Your content and analytics background puts you ahead of many applicants. Before you send this, add a line or two about any paid media exposure — even if it was informal or on a personal project."
+    };
+  }
+
+  function updateReportDOM(data) {
+    document.querySelector('.report-role-text').textContent = data.role_title;
+    
+    const scoreBoxes = document.querySelectorAll('.report-score-num');
+    scoreBoxes[0].innerHTML = `${data.overall_fit_score}<span style="font-size:1rem;color:var(--muted);">%</span>`;
+    if(data.overall_fit_score >= 80) scoreBoxes[0].classList.add("teal");
+    
+    scoreBoxes[1].textContent = data.strengths_matched_count;
+    scoreBoxes[2].textContent = data.gaps_found_count;
+
+    const strengthsList = document.querySelector('.s-strengths .report-list');
+    strengthsList.innerHTML = data.strengths.map(s => `<li><span class="rbullet rb-t"></span>${s}</li>`).join('');
+
+    const gapsList = document.querySelector('.s-gaps .report-list');
+    gapsList.innerHTML = data.gaps.map(g => `<li><span class="rbullet rb-m"></span>${g}</li>`).join('');
+
+    document.querySelector('.rec-block-text').textContent = data.recommendation;
+  }
+
+  async function runAnalysis() {
+    const items=['al1','al2','al3','al4','al5'];
+    const chk='<svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 5.5l2.5 2.5L9 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    
+    const setDone = (id) => { const p = document.getElementById(id); p.querySelector('span').outerHTML='<span class="a-check">'+chk+'</span>'; p.classList.add('done'); p.classList.remove('current'); };
+    const setActive = (id) => { const c = document.getElementById(id); c.querySelector('span').className='a-active'; c.classList.add('current'); };
+
+    // 1. Reading CV
+    setActive('al1');
+    const cvText = await extractTextFromFile(uploadedCVFile);
+    setDone('al1');
+    
+    // 2. Scanning JD
+    setActive('al2');
+    let jdText = document.getElementById('jd-text').value.trim();
+    if(uploadedJDFile) jdText += '\n' + await extractTextFromFile(uploadedJDFile);
+    setDone('al2');
+    
+    // 3. Analyzing
+    setActive('al3'); 
+    const reportData = await callGroqForReport(cvText, jdText);
+    setDone('al3'); 
+    
+    // Quick artificial delay to simulate "Writing report" if AI is too fast
+    setActive('al4');
+    await new Promise(r => setTimeout(r, 600));
+    setDone('al4');
+    setActive('al5');
+    await new Promise(r => setTimeout(r, 600));
+    setDone('al5');
+
+    // Update global state and DOM
+    window.generatedReportData = reportData;
+    window.capturedCVText = cvText;
+    window.capturedJDText = jdText;
+    updateReportDOM(reportData);
+    
+    setTimeout(() => goToolStep('report'), 500);
+  }
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach((e,idx)=>{ if(e.isIntersecting) setTimeout(()=>e.target.classList.add('visible'),idx*90); });
+  },{threshold:0.1});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+  // ===== CHECKOUT =====
+  let selectedPayment = 'paystack';
+  let capturedJD = '';
+
+  function showCheckout() {
+    // Capture JD text for AI generation later
+    capturedJD = document.getElementById('jd-text').value.trim();
+    document.getElementById('checkout-modal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeCheckout() {
+    document.getElementById('checkout-modal').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+  function selectPayment(type) {
+    selectedPayment = type;
+    document.getElementById('opt-paystack').classList.toggle('selected', type === 'paystack');
+    document.getElementById('opt-stripe').classList.toggle('selected', type === 'stripe');
+  }
+  function checkCO() {
+    const n = document.getElementById('co-name').value.trim();
+    const e = document.getElementById('co-email').value.trim();
+    document.getElementById('co-pay-btn').disabled = !(n.length > 0 && e.includes('@') && e.includes('.'));
+  }
+
+  function processPayment() {
+    const name = document.getElementById('co-name').value.trim();
+    const email = document.getElementById('co-email').value.trim();
+    closeCheckout();
+    generatePack(name, email);
+  }
+
+  // ===== AI QUESTION GENERATION =====
+  async function generatePack(name, email) {
+    showPage('generating');
+    runGenSteps();
+
+    const cv = window.capturedCVText || '';
+    const jd = window.capturedJDText || '';
+    const prompt = `You are an expert interview coach and HR leader with three decades of experience. Generate a personalised Interview Edge Pack based EXCLUSIVELY on the exact job description below.
+
+JOB DESCRIPTION (read every word — your output must be anchored to this specific text only):
+${jd}
+
+CANDIDATE CV:
+${cv}
+
+CRITICAL RULES — NO EXCEPTIONS:
+1. Every question must reference specific language, requirements or responsibilities that appear in the JD above. If a question cannot be traced to a specific phrase in the JD, do not include it.
+2. Do NOT generate generic interview questions. Every question must be specific to this exact role and this exact JD.
+3. Qualifications and degrees must be treated EXACTLY as written in the JD. A linguistics degree is a linguistics degree. A communications degree is a communications degree. Never infer equivalencies or conflate similar-sounding fields. Quote qualifications exactly as they appear.
+4. Extract the job title exactly as written — do not rename or infer it.
+5. Competencies must be drawn directly from JD requirements — do not invent competencies not evidenced in the document.
+
+Return ONLY this JSON — no markdown, no explanation, no preamble:
+{
+  "role_title": "exact role title from the JD",
+  "competency_questions": [
+    {
+      "question": "behavioural question containing or directly referencing specific JD language",
+      "jd_anchor": "the exact phrase from the JD this question is based on",
+      "competency": "specific competency drawn from JD requirements",
+      "framework_guide": "2-3 sentences guiding how to structure a strong answer without naming specific frameworks",
+      "interviewer_listening_for": "one honest coaching-tone sentence on what the interviewer really wants"
+    }
+  ],
+  "scenario_questions": [
+    {
+      "question": "scenario question reflecting a specific situation or challenge in the JD",
+      "jd_anchor": "the exact phrase from the JD this scenario is based on",
+      "competency": "specific competency this scenario tests",
+      "framework_guide": "2-3 sentences on how to approach and structure this answer",
+      "interviewer_listening_for": "one honest sentence on what the interviewer really wants"
+    }
+  ]
+}
+
+Rules: exactly 10 competency_questions, exactly 2 scenario_questions.
+Competency questions must open with: Tell me about a time, Describe a situation where, or Give me an example of.
+Scenario questions must open with: Imagine you, How would you approach, or You have just been.
+Every question must be traceable to the JD. No exceptions.`;
+
+    try {
+      const GROQ_API_KEY = "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";
+      const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${GROQ_API_KEY}`
+        },
+        body: JSON.stringify({
+          model: 'llama-3.3-70b-versatile',
+          response_format: { type: 'json_object' },
+          messages: [{ role: 'system', content: 'You are an expert Interview Coach. Output pure JSON only.' }, { role: 'user', content: prompt }],
+          temperature: 0.3
+        })
+      });
+      const data = await response.json();
+      if(data.error) throw new Error(data.error.message);
+      const raw = data.choices[0].message.content;
+      const clean = raw.replace(/```json|```/g, '').trim();
+      const start = clean.indexOf('{');
+      const end = clean.lastIndexOf('}');
+      const pack = JSON.parse(clean.substring(start, end + 1));
+      
+      renderDelivery(pack, name);
+    } catch(err) {
+      console.error(err);
+      renderDelivery(getDemoPack(), name);
+    }
+  }
+
+  function getDemoPack() {
+    return {
+      role_title: "Marketing Coordinator",
+      competency_questions: [
+        { question: "Tell me about a time you managed multiple marketing campaigns simultaneously. How did you prioritise and what was the outcome?", competency: "Project Management", framework_guide: "Open with the context and scale of what you were managing. Walk through the specific approach you took to prioritise — what criteria did you use? Close with a concrete result, ideally with a number or measurable impact.", interviewer_listening_for: "Evidence that you can hold complexity without dropping the ball, and that you use a system — not just instinct." },
+        { question: "Describe a situation where you used data to change the direction of a campaign or content strategy.", competency: "Data Literacy", framework_guide: "Set the scene briefly, then focus on what the data told you and — crucially — what decision you made because of it. The interviewer wants to see that you acted on the insight, not just noticed it.", interviewer_listening_for: "Comfort with data and the confidence to let it challenge your assumptions." },
+        { question: "Give me an example of a piece of content you created that significantly outperformed expectations. What made it work?", competency: "Content Creation", framework_guide: "Describe the brief, your creative process, and the result. Be specific about metrics. Then reflect genuinely on what made it work — this reflection shows self-awareness and learning.", interviewer_listening_for: "Creative thinking grounded in results, not just aesthetics." },
+        { question: "Tell me about a time you had to manage a difficult stakeholder who disagreed with your marketing approach.", competency: "Stakeholder Management", framework_guide: "Be honest about the tension. Describe how you listened first, then how you built your case — with evidence where possible. Show the resolution and what you learned about managing up.", interviewer_listening_for: "Emotional intelligence and the ability to hold your professional ground respectfully." },
+        { question: "Describe a situation where you had to learn a new marketing tool or platform quickly under pressure.", competency: "Adaptability", framework_guide: "Show your learning process — how do you approach the unfamiliar? Be specific about what you did (tutorials, peers, trial runs) and how quickly you became productive. The speed matters less than the approach.", interviewer_listening_for: "A growth mindset and evidence that you take ownership of your own development." },
+        { question: "Give me an example of a campaign or project that didn't go as planned. What happened and what did you do?", competency: "Resilience & Problem Solving", framework_guide: "Don't sanitise this. Be honest about what went wrong. The power is in what you did next and what you took from it. Interviewers respect accountability far more than perfection.", interviewer_listening_for: "Self-awareness, accountability, and the ability to recover without falling apart." },
+        { question: "Tell me about a time you contributed an idea that improved a team process or workflow.", competency: "Initiative", framework_guide: "Describe the problem you noticed — unsolicited observation scores well here. Walk through your idea, how you proposed it, and what the uptake was. Even small improvements show the right instincts.", interviewer_listening_for: "Whether you see beyond your own task list and take ownership without being asked." },
+        { question: "Describe a situation where you had to deliver results with limited resources or budget.", competency: "Resourcefulness", framework_guide: "Set the constraint clearly — what were you working with? Then show your creative thinking. How did you maximise impact? What did you prioritise and what did you let go?", interviewer_listening_for: "Commercial awareness and the ability to do more with less — essential in any marketing team." },
+        { question: "Tell me about a time you had to collaborate across teams or departments to deliver a marketing outcome.", competency: "Collaboration", framework_guide: "Focus on how you built the relationship and managed the coordination — not just the output. What did you do to align different priorities? How did you communicate across different working styles?", interviewer_listening_for: "That you can work across boundaries without friction and take responsibility for the shared outcome." },
+        { question: "Give me an example of when you had to meet a very tight deadline on a piece of work. How did you manage it?", competency: "Time Management", framework_guide: "Be specific about the timeline and the pressure. Walk through your approach step by step. Show that you were proactive — not just reactive. Did you communicate early? Did you ask for help when needed?", interviewer_listening_for: "That you can work under pressure without compromising quality or burning out those around you." }
+      ],
+      scenario_questions: [
+        { question: "Imagine you've just joined the team and your manager asks you to turn around a social media strategy that has been underperforming for six months. Where do you start?", competency: "Strategic Thinking & Initiative", framework_guide: "Structure your answer in phases: first, what would you need to understand before acting? Then what would your diagnosis look like? Then what would your first 30 days actually involve? Show that you listen and learn before you execute.", interviewer_listening_for: "That you don't rush in with solutions before you understand the problem — and that your instincts are grounded in insight, not assumption." },
+        { question: "You've been asked to run a product launch campaign with half the budget you requested and a two-week shorter timeline. How would you approach this?", competency: "Resourcefulness & Decision Making", framework_guide: "Show that your first move is not panic — it's prioritisation. What are the non-negotiables for a launch? What can be phased? How do you communicate the trade-offs to the team and to leadership? End with what success would look like under these constraints.", interviewer_listening_for: "Commercial maturity, calm under pressure, and the ability to make hard calls with clarity." }
+      ]
+    };
+  }
+
+  function renderDelivery(pack, name) {
+    // Set personalised title
+    const firstName = name.split(' ')[0];
+    document.getElementById('delivery-name-title').textContent = `You're ready, ${firstName}.`;
+
+    // Render competency questions
+    const cqContainer = document.getElementById('competency-questions');
+    cqContainer.innerHTML = pack.competency_questions.map((q, i) => `
+      <div class="question-item">
+        <div class="question-num">Question ${i + 1}</div>
+        <div class="question-text">${q.question}</div>
+        <span class="question-competency">${q.competency}</span>
+        <div class="question-framework">
+          <div class="qf-label">How to structure your answer</div>
+          <div class="qf-text">${q.framework_guide}</div>
+          <div class="qf-hint">What they're really listening for: ${q.interviewer_listening_for}</div>
+        </div>
+      </div>
+    `).join('');
+
+    // Render scenario questions
+    const sqContainer = document.getElementById('scenario-questions');
+    sqContainer.innerHTML = pack.scenario_questions.map((q, i) => `
+      <div class="question-item">
+        <div class="question-num">Scenario ${i + 1}</div>
+        <div class="question-text">${q.question}</div>
+        <span class="question-competency">${q.competency}</span>
+        <div class="question-framework">
+          <div class="qf-label">How to approach this</div>
+          <div class="qf-text">${q.framework_guide}</div>
+          <div class="qf-hint">What they're really listening for: ${q.interviewer_listening_for}</div>
+        </div>
+      </div>
+    `).join('');
+
+    showPage('delivery');
+    
+    // Trigger email delivery of pack
+    const email = document.getElementById('co-email').value.trim();
+    sendEdgePackEmail(pack, name, email);
+  }
+
+  function downloadEdgePackPDF() {
+    const element = document.getElementById('pack-content');
+    const opt = {
+      margin: 0.5,
+      filename: 'Interview_Edge_Pack.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true },
+      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+    html2pdf().set(opt).from(element).save();
+  }
+
+  function sendEdgePackEmail(pack, name, email) {
+    const qText = pack.competency_questions.map((q, i) => `Q${i+1}: ${q.question}\nFramework: ${q.framework_guide}\n`).join('\n');
+    emailjs.send('service_lqnhctm', 'template_edge_pack', {
+      to_name: name,
+      to_email: email,
+      role_title: pack.role_title,
+      pack_content: qText
+    }).then(
+      () => console.log('Edge Pack email sent!'),
+      (err) => console.error('Edge Pack email failed:', err)
+    );
+  }
+
+
+  // ── Fix 3: Validation layer ──────────────────────────────────────
+  async function validateAndRegenerate(pack, jd) {
+    const allQuestions = [...pack.competency_questions, ...pack.scenario_questions];
+    const jdLower = jd.toLowerCase();
+    const suspicious = [];
+
+    allQuestions.forEach((q, idx) => {
+      // Check if jd_anchor phrase actually appears in the JD
+      const anchor = (q.jd_anchor || '').toLowerCase();
+      const anchorWords = anchor.split(' ').filter(w => w.length > 4);
+      const matchCount = anchorWords.filter(w => jdLower.includes(w)).length;
+      const matchRatio = anchorWords.length > 0 ? matchCount / anchorWords.length : 0;
+      if (matchRatio < 0.5) {
+        suspicious.push({ idx, type: idx < pack.competency_questions.length ? 'competency' : 'scenario' });
+      }
+    });
+
+    // If more than 3 questions are suspicious, regenerate the whole pack with stricter prompt
+    if (suspicious.length > 3) {
+      try {
+        const strictPrompt = `The following job description must be used to generate interview questions. Read it word by word. Every question must quote or directly paraphrase something written in this JD.
+
+JD: ${jd}
+
+Return ONLY JSON matching this structure exactly — 10 competency_questions and 2 scenario_questions. Each question must include a jd_anchor that is a direct quote of 3+ words from the JD above.
+
+${JSON.stringify({
+  role_title: "string",
+  competency_questions: [{question:"string",jd_anchor:"direct quote from JD",competency:"string",framework_guide:"string",interviewer_listening_for:"string"}],
+  scenario_questions: [{question:"string",jd_anchor:"direct quote from JD",competency:"string",framework_guide:"string",interviewer_listening_for:"string"}]
+})}`;
+
+        const r2 = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model: 'claude-sonnet-4-20250514',
+            max_tokens: 4000,
+            messages: [{ role: 'user', content: strictPrompt }]
+          })
+        });
+        const d2 = await r2.json();
+        const raw2 = d2.content.map(i => i.text || '').join('');
+        const clean2 = raw2.replace(/```json|```/g, '').trim();
+        return JSON.parse(clean2);
+      } catch(e) {
+        return pack; // fall back to original if regeneration fails
+      }
+    }
+    return pack;
+  }
+
+  function runGenSteps() {
+    const steps = ['gs1','gs2','gs3','gs4','gs5','gs6','gs7'];
+    const chk = '<svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 5.5l2.5 2.5L9 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    let i = 0;
+    const delays = [800, 900, 1200, 1100, 1000, 800, 600];
+    function next() {
+      if (i > 0) {
+        const prev = document.getElementById(steps[i-1]);
+        prev.querySelector('span').outerHTML = '<span class="gs-icon gs-done">' + chk + '</span>';
+        prev.classList.add('done'); prev.classList.remove('current');
+      }
+      if (i < steps.length) {
+        const cur = document.getElementById(steps[i]);
+        cur.querySelector('span').className = 'gs-icon gs-active';
+        cur.classList.add('current');
+        setTimeout(next, delays[i]);
+        i++;
+      }
+    }
+    next();
+  }
+
+
+  // ── Rating & Feedback ────────────────────────────────────────────
+  const ratings = {};
+
+  function rateStar(context, val) {
+    ratings[context] = val;
+    const stars = document.querySelectorAll(`#stars-${context} .star-btn`);
+    stars.forEach(s => {
+      s.classList.toggle('lit', parseInt(s.dataset.val) <= val);
+    });
+  }
+
+  function toggleIssue(context) {
+    const form = document.getElementById(`issue-form-${context}`);
+    form.classList.toggle('visible');
+  }
+
+  function submitFeedback(context) {
+    const rating = ratings[context] || 0;
+    const text = document.getElementById(`feedback-text-${context}`).value.trim();
+    
+    if (rating >= 4) {
+      const thanksBox = document.getElementById(`feedback-thanks-${context}`);
+      thanksBox.innerHTML = `
+        <div class="feedback-thanks-title" style="margin-bottom:1rem;color:var(--mustard);">We're so glad! Please share your experience below.</div>
+        <iframe src="https://senja.io/p/rolefit/r/2YylPe" width="100%" height="600" frameborder="0" style="border-radius:12px;background:#f9fafb"></iframe>
+      `;
+    }
+
+    document.getElementById(`feedback-btn-${context}`).disabled = true;
+    document.getElementById(`feedback-thanks-${context}`).style.display = 'block';
+    document.getElementById(`feedback-btn-${context}`).style.display = 'none';
+    document.getElementById(`feedback-text-${context}`).style.display = 'none';
+    document.querySelector(`#feedback-${context} .feedback-issue-link`).style.display = 'none';
+  }
+
+  function submitIssue(context) {
+    const text = document.getElementById(`issue-text-${context}`).value.trim();
+    // In production: POST to your backend with issue flag
+    // console.log({ context, type: 'issue', text });
+    document.getElementById(`issue-form-${context}`).innerHTML =
+      '<p style="font-size:0.8rem;color:var(--teal);margin-top:6px;">Issue received — thank you. We will review and be in touch if needed.</p>';
+  }
+
+</script>
+
+<!-- ===================== CHECKOUT MODAL ===================== -->
+<div class="modal-overlay" id="checkout-modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <button class="modal-close" onclick="closeCheckout()">&#215;</button>
+      <div class="modal-title">Interview Edge Pack</div>
+      <div class="modal-sub">You're one step away from walking in fully prepared.</div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-price-strip">
+        <div>
+          <div class="modal-price-label">One-time payment · Instant delivery</div>
+          <div class="modal-currency-row">
+            <span class="modal-cpill">KES 1,500</span>
+            <span class="modal-cpill">USD $15</span>
+            <span class="modal-cpill">GBP £15</span>
+            <span class="modal-cpill">EUR €15</span>
+            <span class="modal-cpill">AUD $15</span>
+            <span class="modal-cpill">CAD $15</span>
+          </div>
+        </div>
+        <div class="modal-price-amount">KES 1,500</div>
+      </div>
+
+      <div class="modal-section-label">Payment Method</div>
+      <div class="modal-payment-options">
+        <div class="payment-option selected" id="opt-paystack" onclick="selectPayment('paystack')">
+          <div class="payment-option-name">Paystack</div>
+          <div class="payment-option-sub">Card, M-Pesa, Mobile money</div>
+          <span class="payment-option-tag">Africa-first</span>
+        </div>
+      </div>
+
+      <div class="modal-divider"></div>
+      <div class="modal-email-label">Where should we send your pack?</div>
+      <div class="modal-email-hint">Enter your name and email — your Interview Edge Pack will be delivered here instantly after payment, along with a private web link you can access any time.</div>
+      <input class="modal-input" type="text" id="co-name" placeholder="Your first name" oninput="checkCO()"/>
+      <input class="modal-input" type="email" id="co-email" placeholder="your@email.com" oninput="checkCO()"/>
+      <button class="modal-pay-btn" id="co-pay-btn" onclick="processPayment()" disabled>Pay & get my pack</button>
+      <div class="modal-privacy">Your payment is secure. Your email is used only to deliver your pack and occasional career insights from Diana. Unsubscribe any time.</div>
+    </div>
+  </div>
+</div>
+
+<!-- GENERATING PAGE REMOVED AS REQUESTED -->
+
+<!-- ===================== DELIVERY PAGE ===================== -->
+<div class="page delivery-page" id="page-delivery">
+  <div class="delivery-wrap">
+    <div class="delivery-header">
+      <div class="delivery-tag">Your Interview Edge Pack is ready</div>
+      <div class="delivery-title" id="delivery-name-title">You're ready, Alex.</div>
+      <div class="delivery-sub">Your personalised pack has been sent to your inbox. Access it below any time.</div>
+    </div>
+
+    <div class="delivery-actions">
+      <button class="delivery-action-btn dab-primary" onclick="downloadEdgePackPDF()">
+        <div class="dab-icon dab-icon-m">⬇</div>
+        <div>
+          <div class="dab-text-label">Download your</div>
+          <div class="dab-text-main">Interview Edge Pack PDF</div>
+        </div>
+      </button>
+      <p style="font-size: 0.85rem; color: var(--muted); align-self: center;">A backup copy has also been sent to your email.</p>
+    </div>
+
+    <!-- QUESTIONS - populated by AI -->
+    <div id="pack-content">
+      <!-- Competency Questions -->
+      <div class="pack-section">
+        <div class="pack-section-header">
+          <div class="pack-section-num psn-m">01</div>
+          <div>
+            <div class="pack-section-title">Competency-based behavioural questions</div>
+            <div class="pack-section-sub">Draw on real examples from your experience — the more specific, the stronger your answer</div>
+          </div>
+        </div>
+        <div id="competency-questions"></div>
+      </div>
+
+      <!-- Scenario Questions -->
+      <div class="pack-section">
+        <div class="pack-section-header">
+          <div class="pack-section-num psn-b">02</div>
+          <div>
+            <div class="pack-section-title">Scenario &amp; situational questions</div>
+            <div class="pack-section-sub">These test how you think, not just what you've done — show your reasoning process</div>
+          </div>
+        </div>
+        <div id="scenario-questions"></div>
+      </div>
+    </div>
+
+    <!-- Rieko upsell -->
+    
+      <!-- FEEDBACK ON PACK -->
+      <div class="feedback-section" id="feedback-pack" style="margin-top:1.5rem; padding: 0; overflow: hidden; border: none; background: transparent;">
+        <iframe src="https://senja.io/p/rolefit/r/2YylPe" width="100%" height="600" frameborder="0" style="border-radius:12px; background: transparent;"></iframe>
+      </div>
+
+<!-- 1:1 Coaching Block moved to report section -->
+
+  </div>
+</div>
+
+<!-- ===================== LEGAL MODAL ===================== -->
+<div class="modal-overlay" id="legal-modal" style="display:none; z-index: 1000;">
+  <div class="modal-box">
+    <div class="modal-header">
+      <button class="modal-close" onclick="closeLegalModal()">&#215;</button>
+      <div class="modal-title" id="legal-title">Legal</div>
+    </div>
+    <div class="modal-body" id="legal-body" style="max-height: 400px; overflow-y: auto; font-size: 0.85rem; color: var(--muted); line-height: 1.6;">
+    </div>
+  </div>
+</div>
+
+<script>
+  const legalContent = {
+    privacy: `
+      <strong style="color:var(--ink)">Privacy Policy</strong><br><br>
+      At RoleFit (powered by Rieko), we take your privacy seriously. We only collect the personal information necessary to deliver your Fit Report and Interview Edge Pack (such as your name, email, CV text, and job description).<br><br>
+      <strong>1. Data Usage:</strong> Your CV and Job Description data are temporarily sent to our AI providers (like Groq) purely to generate your report. This data is not used to train models.<br>
+      <strong>2. Data Retention:</strong> We do not permanently store your CV documents on our servers. Once your session ends and your email is dispatched, the raw documents are discarded.<br>
+      <strong>3. Third-party providers:</strong> We use industry-standard providers (Paystack, EmailJS) to process payments and emails. We never sell or share your data with advertisers.<br><br>
+      If you have questions regarding your data, please contact us at: <a href="mailto:diana@rieko.ke" style="color:var(--teal)">diana@rieko.ke</a>.
+    `,
+    terms: `
+      <strong style="color:var(--ink)">Terms of Service</strong><br><br>
+      Welcome to RoleFit. By using our tool, you agree to these terms:<br><br>
+      <strong>1. Service Nature:</strong> RoleFit is an AI-powered educational and preparatory tool. While our analysis and generated questions are designed to highly improve your interview readiness, we do not guarantee job placement, interview offers, or hiring outcomes.<br>
+      <strong>2. Payments:</strong> The Interview Edge Pack is an instantly delivered digital product. Refunds are handled on a case-by-case basis via our support contact.<br>
+      <strong>3. Intellectual Property:</strong> The generated frameworks, UI, and algorithms remain the property of RoleFit / Rieko.<br><br>
+      For any inquiries or technical support, please reach out to us at: <a href="mailto:diana@rieko.ke" style="color:var(--teal)">diana@rieko.ke</a>.
+    `
+  };
+
+  function showLegalModal(type) {
+    document.getElementById('legal-title').textContent = type === 'privacy' ? 'Privacy Policy' : 'Terms of Service';
+    document.getElementById('legal-body').innerHTML = legalContent[type];
+    document.getElementById('legal-modal').style.display = 'flex';
+    document.getElementById('legal-modal').style.alignItems = 'center';
+    document.getElementById('legal-modal').style.justifyContent = 'center';
+  }
+
+  function closeLegalModal() {
+    document.getElementById('legal-modal').style.display = 'none';
+  }
+</script>
+
+</body>
+</html>
